@@ -1,0 +1,308 @@
+<div class="page">
+  <div class="header">
+    <h2>المستأجرين</h2>
+
+    <div class="d-flex justify-content-between align-items-center gap-2 mb-3">
+      <button
+        class="main-button"
+        type="button"
+        data-bs-toggle="modal"
+        data-bs-target="#exampleModal"
+      >
+        + اضافة مستأجر جديد
+      </button>
+
+      <button class="btn btn-outline-secondary" (click)="toggleFilter()">
+        فلترة ⚙️
+      </button>
+    </div>
+  </div>
+  <div class="filter-panel" *ngIf="showFilter">
+    <form [formGroup]="filterForm" class="row g-3">
+      <div class="col-md-3">
+        <label class="form-label">الحالة</label>
+        <select class="form-select" formControlName="active">
+          <option value="">الكل</option>
+          <option [value]="true">Active</option>
+          <option [value]="false">Inactive</option>
+        </select>
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">اسم المكتب</label>
+        <input type="text" class="form-control" formControlName="tenantName" />
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">اسم المسؤول</label>
+        <input
+          type="text"
+          class="form-control"
+          formControlName="administrationName"
+        />
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">تاريخ الغاء التفعيل من</label>
+        <input
+          type="date"
+          class="form-control"
+          formControlName="deactivateDateFrom"
+        />
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">تاريخ الغاء التفعيل الي</label>
+        <input
+          type="date"
+          class="form-control"
+          formControlName="deactivateDateTo"
+        />
+      </div>
+
+      <div class="col-12 text-center d-flex gap-3">
+        <button
+          type="button"
+          class="btn btn-primary me-2"
+          (click)="applyFilters()"
+        >
+          تطبيق
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-outline-secondary"
+          (click)="resetFilters()"
+        >
+          مسح
+        </button>
+      </div>
+    </form>
+  </div>
+  <div class="card">
+    <div class="table-container">
+      <table class="table align-middle">
+        <thead>
+          <tr>
+            <th>اسم المكتب</th>
+            <th>اسم المسئول بالكامل</th>
+            <th>البريد الاليكتروني للمسئول</th>
+            <th>رقم الهاتف</th>
+            <th>الشعار</th>
+            <th>التفعيل</th>
+            <th>تاريخ إلغاء التفعيل</th>
+            <th>الخطة</th>
+
+            <th class="text-center">الإجراءات</th>
+          </tr>
+        </thead>
+
+        <tbody *ngIf="!isNoData">
+          <tr *ngFor="let tenant of tenants; let i = index">
+            <td>{{ tenant.name }}</td>
+            <td>{{ tenant.administrationFullName }}</td>
+            <td>{{ tenant.administratorEmail }}</td>
+            <td>{{ tenant.mobileNumber }}</td>
+
+            <!-- Logo -->
+            <td>
+              <img
+                [src]="tenant.logoUrl || 'assets/no-image.png'"
+                width="40"
+                height="40"
+                class="rounded"
+              />
+            </td>
+            <td>
+              <div
+                class="status-circle"
+                [ngClass]="tenant.active ? 'active' : 'inactive'"
+              ></div>
+            </td>
+            <td>
+              <!-- لو Active ومفيش input -->
+              <span *ngIf="tenant.active && !tenant.showDateInput">
+                {{ tenant.deactivationDate || "—" }}
+              </span>
+
+              <!-- Input يظهر لما نعمل Activate -->
+              <input
+                *ngIf="tenant.showDateInput"
+                type="date"
+                class="form-control form-control-sm"
+                (change)="onDateSelected(tenant, $event)"
+              />
+
+              <!-- Inactive -->
+              <span
+                *ngIf="!tenant.active && !tenant.showDateInput"
+                class="text-muted"
+              >
+                Inactive
+              </span>
+            </td>
+            <td>{{ tenant.plan }}</td>
+
+            <!-- Actions -->
+            <td class="text-center">
+              <!-- Update -->
+              <button
+                data-bs-toggle="modal"
+                data-bs-target="#exampleModal"
+                type="button"
+                class="btn btn-sm btn-outline-primary me-1"
+                (click)="editTenant(tenant)"
+              >
+                تعديل
+              </button>
+
+              <!-- Delete -->
+            </td>
+          </tr>
+        </tbody>
+        <tbody *ngIf="isNoData">
+          <tr>
+            <td colspan="9" class="no-data-cell">
+              <div>
+                <i class="bi bi-search fs-1 mb-2 d-block"></i>
+                لا يوجد بيانات متطابقة
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div *ngIf="!isNoData" class="d-flex justify-content-center mt-3">
+      <button
+        class="btn btn-sm btn-outline-secondary ms-2"
+        [disabled]="currentPage === 0"
+        (click)="changePage(currentPage - 1)"
+      >
+        السابق
+      </button>
+
+      <span class="align-self-center">
+        صفحة {{ currentPage + 1 }} من {{ totalPages }}
+      </span>
+
+      <button
+        class="btn btn-sm btn-outline-secondary me-2"
+        [disabled]="currentPage + 1 === totalPages"
+        (click)="changePage(currentPage + 1)"
+      >
+        التالي
+      </button>
+    </div>
+  </div>
+</div>
+<div
+  class="modal fade"
+  id="exampleModal"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div>
+        <div class="card p-4">
+          <h2 class="mb-3">
+            {{ isEditMode ? "تعديل مستأجر" : "أضافة مستأجر جديد" }}
+          </h2>
+          <form [formGroup]="form" (ngSubmit)="submit()">
+            <!-- Name -->
+            <div class="row">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label class="form-label">اسم المكتب</label>
+                  <input class="form-control" formControlName="name" />
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label class="form-label">اسم المسئول بالكامل</label>
+                  <input
+                    class="form-control"
+                    formControlName="administrationFullName"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label class="form-label">البريد الاليكتروني للمسئول</label>
+                  <input
+                    type="email"
+                    class="form-control"
+                    formControlName="administratorEmail"
+                  />
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label class="form-label">رقم الهاتف</label>
+                  <input class="form-control" formControlName="mobileNumber" />
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label class="form-label">تاريح انهاء التفعيل</label>
+                  <input
+                    type="date"
+                    class="form-control"
+                    formControlName="deactivationDate"
+                    [min]="minDate"
+                  />
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label class="form-label">الخطة</label>
+                  <select class="form-select" formControlName="plan">
+                    <option value="">اختيار الخطة</option>
+                    <option *ngFor="let plan of plans" [value]="plan">
+                      {{ plan }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">الشعار</label>
+              <input
+                type="file"
+                class="form-control"
+                (change)="onFileChange($event)"
+              />
+            </div>
+
+            <div class="form-buttons">
+              <button
+                class="btn btn-primary"
+                type="submit"
+                data-bs-dismiss="modal"
+              >
+                {{ isEditMode ? "تعديل" : "اضافة" }}
+              </button>
+
+              <button
+                data-bs-dismiss="modal"
+                type="button"
+                class="btn btn-secondary"
+                (click)="resetForm()"
+              >
+                الغاء
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

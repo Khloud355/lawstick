@@ -1,0 +1,34 @@
+<div class="login-page">
+  <div class="login-card">
+    <div class="logo"><span>Law</span>Stick</div>
+
+    <h2 *ngIf="isFirst">مرحبا بعودتك 👋</h2>
+    <p class="subtitle">من فضلك أدخل حسابك الشخصي</p>
+
+    <form [formGroup]="form">
+      <div class="field">
+        <label>البريد الاليكتروني</label>
+        <input
+          type="email"
+          formControlName="username"
+          placeholder="you@example.com"
+        />
+      </div>
+
+      <div class="field">
+        <label>كلمة المرور</label>
+        <input
+          type="password"
+          formControlName="password"
+          placeholder="••••••••"
+        />
+      </div>
+
+      <button class="main-button" [disabled]="!isLogin" (click)="logIn()">
+        تسجيل الدخول
+      </button>
+    </form>
+
+    <a class="forgot">هل نسيت كلمة المرور?</a>
+  </div>
+</div>

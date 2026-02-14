@@ -1,0 +1,79 @@
+/* Buttons */
+.main-button {
+  background: #3b82f6;
+  color: #fff;
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  &:disabled {
+    background-color: #d1d5db;
+    color: #9ca3af;
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+  // &:hover {
+  //   background: #2563eb;
+  // }
+}
+.cancel-btn {
+  color: #fff;
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  background-color: #6b7280;
+}
+/* Cards */
+.card {
+  background: #fff;
+  border-radius: 14px;
+  padding: 16px;
+  // min-height: 34rem;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+}
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+
+  h2 {
+    margin: 0;
+  }
+}
+/* Page wrapper */
+.page {
+  padding: 24px;
+  height: 100vh;
+}
+
+/* Flex helpers */
+.flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.text-muted {
+  color: #6b7280;
+  font-size: 13px;
+}
+.form-buttons {
+  margin-top: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+}
+.form-label {
+  color: #000;
+  font-size: 15px;
+  font-weight: 600;
+}
+.table-container {
+  height: 450px;
+  // overflow-y: scroll; // مهم جدًا
+}

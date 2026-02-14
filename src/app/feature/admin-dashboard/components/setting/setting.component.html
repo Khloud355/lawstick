@@ -1,0 +1,154 @@
+<div class="page">
+  <div class="header">
+    <h2>انواع القضايا</h2>
+
+    <button
+      class="main-button"
+      type="button"
+      class="btn btn-primary"
+      data-bs-toggle="modal"
+      data-bs-target="#exampleModal"
+    >
+      + نوع قضية جديده
+    </button>
+  </div>
+  <div class="card">
+    <div class="table-container">
+      <table class="table align-middle">
+        <thead>
+          <tr>
+            <th>رقم المسلسل</th>
+            <th>اسم القضية</th>
+            <th>التفعيل</th>
+
+            <th class="text-center">الإجراءات</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let case of typeOfCases; let i = index">
+            <td>{{ case.id }}</td>
+            <td>{{ case.name }}</td>
+            <td>
+              <div
+                class="status-circle"
+                [ngClass]="case.active ? 'active' : 'inactive'"
+              ></div>
+            </td>
+            <!-- Actions -->
+            <td class="text-center">
+              <!-- Update -->
+              <button
+                data-bs-toggle="modal"
+                data-bs-target="#exampleModal"
+                type="button"
+                class="btn btn-sm btn-outline-primary me-1"
+                (click)="editcaseType(case)"
+              >
+                تعديل
+              </button>
+              <button
+                type="button"
+                class="btn btn-sm me-1"
+                [ngClass]="
+                  case.active ? 'btn-outline-danger' : 'btn-outline-success'
+                "
+                (click)="toggleStatus(case)"
+              >
+                {{ case.active ? "Inactive" : "Active" }}
+              </button>
+              <!-- Delete -->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="d-flex justify-content-center mt-4">
+      <button
+        class="btn btn-sm btn-outline-secondary ms-2"
+        [disabled]="currentPage === 0"
+        (click)="changePage(currentPage - 1)"
+      >
+        السابق
+      </button>
+
+      <span class="align-self-center">
+        صفحة {{ currentPage + 1 }} من {{ totalPages }}
+      </span>
+
+      <button
+        class="btn btn-sm btn-outline-secondary me-2"
+        [disabled]="currentPage + 1 === totalPages"
+        (click)="changePage(currentPage + 1)"
+      >
+        التالي
+      </button>
+    </div>
+
+    <!-- <div *ngIf="!isNoData" class="d-flex justify-content-center mt-3">
+      <button
+        class="btn btn-sm btn-outline-secondary ms-2"
+        [disabled]="currentPage === 0"
+        (click)="changePage(currentPage - 1)"
+      >
+        السابق
+      </button>
+
+      <span class="align-self-center">
+        صفحة {{ currentPage + 1 }} من {{ totalPages }}
+      </span>
+
+      <button
+        class="btn btn-sm btn-outline-secondary me-2"
+        [disabled]="currentPage + 1 === totalPages"
+        (click)="changePage(currentPage + 1)"
+      >
+        التالي
+      </button>
+    </div> -->
+  </div>
+</div>
+<!-- Modal -->
+<div
+  class="modal fade"
+  id="exampleModal"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">ادخل نوع القضية</h1>
+      </div>
+
+      <form [formGroup]="caseTypeForm" (ngSubmit)="submit()" class="p-4">
+        <!-- Case Type Name -->
+        <div class="mb-3">
+          <label class="form-label"> نوع القضية</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="name"
+            placeholder="ادخل  نوع القضية"
+          />
+        </div>
+
+        <div class="form-buttons">
+          <button class="btn btn-primary" type="submit" data-bs-dismiss="modal">
+            {{ isEditMode ? "تعديل" : "اضافة" }}
+          </button>
+
+          <button
+            data-bs-dismiss="modal"
+            type="button"
+            class="btn btn-secondary"
+            (click)="resetForm()"
+          >
+            الغاء
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

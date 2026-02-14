@@ -1,0 +1,86 @@
+.form-switch {
+  padding-left: 0 !important;
+}
+.status-circle {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.active {
+  background-color: #28a745; /* green */
+}
+
+.inactive {
+  background-color: #dc3545; /* red */
+}
+.modal-dialog {
+  margin-right: 25%;
+  margin-left: unset;
+}
+.modal-content {
+  width: 50rem;
+}
+
+.card {
+  background: #fff;
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+}
+.table-container {
+  height: 450px;
+  // overflow-y: scroll; // مهم جدًا
+
+  table {
+    // table-layout: fixed;
+
+    width: 100%;
+    border-collapse: collapse;
+    thead {
+      border-bottom: 2px solid;
+    }
+    th {
+      // text-align: left;
+      font-size: 15px;
+      color: #000;
+      padding-bottom: 12px;
+    }
+
+    td {
+      padding: 20px 0.5rem;
+      color: #2b2a2a;
+      border-top: 1px solid #ccc;
+      font-size: 14px;
+    }
+  }
+}
+.no-data-cell {
+  text-align: center;
+  vertical-align: middle;
+  height: 350px;
+  font-size: 20px;
+  color: #6c757d;
+  font-weight: 500;
+  opacity: 0.8;
+}
+.filter-panel {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+  border: 1px solid #e0e0e0;
+  animation: slideDown 0.3s ease-in-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
